@@ -76,68 +76,69 @@
   </section>
 
   <!-- Table + Side Panel -->
-  <section class="content-row">
-    <div class="table-wrap glass-card">
-      <div class="table-toolbar">
-        <span class="table-title">Measurement Data</span>
-        <span class="table-meta" id="table-meta"></span>
-      </div>
-      <div class="table-scroll" id="table-scroll">
-        <div class="empty-state" id="empty-state">
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="3" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3"/><path d="M18 13v7M18 24v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          <p>กำหนด Subgroup, n แล้วกด Generate Table</p>
-        </div>
+  <section class="content-row" style="display: block;">
+  <div class="table-wrap glass-card" style="width: 100%;">
+    <div class="table-toolbar">
+      <span class="table-title">Measurement Data</span>
+      <span class="table-meta" id="table-meta"></span>
+    </div>
+    <div class="table-scroll" id="table-scroll">
+      <div class="empty-state" id="empty-state">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="3" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3"/><path d="M18 13v7M18 24v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <p>กำหนด Subgroup, n แล้วกด Generate Table</p>
       </div>
     </div>
+  </div>
+</section>
 
-    <aside class="side-panel glass-card">
-      <div class="side-block">
-        <div class="side-heading">Specification</div>
-        <div class="kv-list">
-          <div class="kv"><span>Standard</span><span id="d-std">—</span></div>
-          <div class="kv"><span><span class="sdot red"></span>USL</span><span id="d-usl">—</span></div>
-          <div class="kv"><span><span class="sdot green"></span>LSL</span><span id="d-lsl">—</span></div>
-        </div>
-      </div>
+<section class="stats-dashboard side-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-top: 14px;">
+  
+  <div class="side-block glass-card">
+    <div class="side-heading">Specification</div>
+    <div class="kv-list">
+      <div class="kv"><span>Standard</span><span id="d-std">—</span></div>
+      <div class="kv"><span><span class="sdot red"></span>USL</span><span id="d-usl">—</span></div>
+      <div class="kv"><span><span class="sdot green"></span>LSL</span><span id="d-lsl">—</span></div>
+    </div>
+  </div>
 
-      <div class="side-block">
-        <div class="side-heading">x̄-Chart</div>
-        <div class="kv-list">
-          <div class="kv"><span>X̄ (Grand mean)</span><span id="d-xbarbar">—</span></div>
-          <div class="kv kv-ucl"><span>UCL<sub>x̄</sub></span><span id="d-uclx">—</span></div>
-          <div class="kv kv-lcl"><span>LCL<sub>x̄</sub></span><span id="d-lclx">—</span></div>
-        </div>
-      </div>
+  <div class="side-block glass-card">
+    <div class="side-heading">x̄-Chart Summary</div>
+    <div class="kv-list">
+      <div class="kv"><span>X̄ (Grand mean)</span><span id="d-xbarbar">—</span></div>
+      <div class="kv kv-ucl"><span>UCL<sub>x̄</sub></span><span id="d-uclx">—</span></div>
+      <div class="kv kv-lcl"><span>LCL<sub>x̄</sub></span><span id="d-lclx">—</span></div>
+    </div>
+  </div>
 
-      <div class="side-block">
-        <div class="side-heading">R-Chart</div>
-        <div class="kv-list">
-          <div class="kv"><span>R̄ (Mean range)</span><span id="d-rbar">—</span></div>
-          <div class="kv kv-ucl"><span>UCL<sub>R</sub></span><span id="d-uclr">—</span></div>
-          <div class="kv kv-lcl"><span>LCL<sub>R</sub></span><span id="d-lclr">—</span></div>
-        </div>
-      </div>
+  <div class="side-block glass-card">
+    <div class="side-heading">R-Chart Summary</div>
+    <div class="kv-list">
+      <div class="kv"><span>R̄ (Mean range)</span><span id="d-rbar">—</span></div>
+      <div class="kv kv-ucl"><span>UCL<sub>R</sub></span><span id="d-uclr">—</span></div>
+      <div class="kv kv-lcl"><span>LCL<sub>R</sub></span><span id="d-lclr">—</span></div>
+    </div>
+  </div>
 
-      <div class="side-block">
-        <div class="side-heading">Constants (n=<span id="d-n">—</span>)</div>
-        <div class="kv-list">
-          <div class="kv"><span>A₂</span><span id="d-a2">—</span></div>
-          <div class="kv"><span>D₃</span><span id="d-d3">—</span></div>
-          <div class="kv"><span>D₄</span><span id="d-d4">—</span></div>
-          <div class="kv"><span>d₂</span><span id="d-d2">—</span></div>
-        </div>
-      </div>
+  <div class="side-block glass-card">
+    <div class="side-heading">Constants (n=<span id="d-n">—</span>)</div>
+    <div class="kv-list">
+      <div class="kv"><span>A₂ / d₂</span><span><span id="d-a2">—</span> / <span id="d-d2">—</span></span></div>
+      <div class="kv"><span>D₃</span><span id="d-d3">—</span></div>
+      <div class="kv"><span>D₄</span><span id="d-d4">—</span></div>
+    </div>
+  </div>
 
-      <div class="side-block">
-        <div class="side-heading">Process Capability</div>
-        <div class="cap-grid">
-          <div class="cap-box"><div class="cap-val" id="d-cp">—</div><div class="cap-key">Cp</div></div>
-          <div class="cap-box"><div class="cap-val" id="d-cpk">—</div><div class="cap-key">Cpk</div></div>
-        </div>
-        <div class="cap-badge-wrap"><span class="cap-badge" id="d-cap-status"></span></div>
-      </div>
-    </aside>
-  </section>
+  <div class="side-block glass-card">
+    <div class="side-heading">Process Capability</div>
+    <div class="cap-grid">
+      <div class="cap-box"><div class="cap-val" id="d-cp">—</div><div class="cap-key">Cp</div></div>
+      <div class="cap-box"><div class="cap-val" id="d-cpk">—</div><div class="cap-key">Cpk</div></div>
+    </div>
+    <div class="cap-badge-wrap"><span class="cap-badge" id="d-cap-status"></span></div>
+  </div>
+
+</section>
 
   <!-- X-bar Chart -->
   <section class="chart-section glass-card">
