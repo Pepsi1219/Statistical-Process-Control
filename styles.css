@@ -399,3 +399,54 @@ canvas{
   .canvas-wrap{height:220px}
   .side-panel{grid-template-columns:1fr 1fr}
 }
+
+/* ปรับ Content Row ให้เต็มจอ */
+.content-row {
+  display: block; 
+  width: 100%;
+}
+
+.table-wrap {
+  width: 100%;
+}
+
+/* จัดการ Grid ของกราฟให้แสดงคู่กัน */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ปรับ Side Panel ให้เป็น Dashboard แนวนอน */
+.stats-dashboard {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 คอลัมน์ */
+  gap: 14px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+/* ปรับแต่ง Block ภายใน Dashboard */
+.stats-dashboard .side-block {
+  border-bottom: none; /* เอาเส้นคั่นออก */
+  padding: 16px;
+}
+
+/* Responsive ปรับตามขนาดหน้าจอ */
+@media (max-width: 1400px) {
+  .stats-dashboard {
+    grid-template-columns: repeat(3, 1fr); /* จอกลางเหลือ 3 คอลัมน์ */
+  }
+}
+
+@media (max-width: 1100px) {
+  .charts-grid {
+    grid-template-columns: 1fr; /* กราฟเรียงแนวตั้งบนมือถือ/แท็บเล็ต */
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-dashboard {
+    grid-template-columns: 1fr; /* สรุปผลเรียงแนวตั้งบนมือถือ */
+  }
+}
