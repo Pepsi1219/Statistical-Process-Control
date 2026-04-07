@@ -41,14 +41,32 @@
       <div class="field-group">
         <label class="field-label" for="inp-subgroup">Subgroup (k)</label>
         <div class="field-wrap">
-          <input type="number" id="inp-subgroup" class="field-input" value="10" min="2" max="50"/>
+          <input
+          type="number" 
+          id="inp-subgroup"
+          class="field-input" 
+          step="any" 
+          inputmode="decimal" 
+          pattern="[0-9]*" 
+          placeholder="—"
+          value="10" min="2" max="50"
+        />
           <span class="field-unit">groups</span>
         </div>
       </div>
       <div class="field-group">
         <label class="field-label" for="inp-n">Sample Size (n)</label>
         <div class="field-wrap">
-          <input type="number" id="inp-n" class="field-input" value="5" min="2" max="10"/>
+          <input
+          type="number" 
+          id="inp-n"
+          class="field-input" 
+          step="any" 
+          inputmode="decimal" 
+          pattern="[0-9]*" 
+          placeholder="—"
+          value="5" min="2" max="10"
+          />
           <span class="field-unit">samples</span>
         </div>
       </div>
