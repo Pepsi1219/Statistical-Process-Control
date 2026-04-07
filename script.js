@@ -428,9 +428,11 @@ function drawSPCChart(canvas, dataArr, oocArr, hLines, labels, lineColor, yLabel
   ctx.textBaseline = 'top';
   labels.forEach((lbl, i) => {
     if (i % step !== 0 && i !== labels.length - 1) return;
-    ctx.fillText(lbl, xPos(i), pad.top + ph + 6);
-  });
-  ctx.restore();
+   const cleanLbl = lbl.startsWith('x') ? lbl.substring(1) : lbl;
+  ctx.fillText(cleanLbl, xPos(i), pad.top + ph + 6);
+  // ---------------------
+});
+ctx.restore();
 
   // ── Y label ──
   ctx.save();
@@ -670,60 +672,61 @@ function drawRChart(res) {
 /* ============================================================
    §11  DEMO DATA
    ============================================================ */
-const DEMO = {
-  k: 30, n: 5, standard: 14.355, usl: 14.40, lsl: 14.31,
-  data: [
-    [14.31,14.32,14.32,14.34,14.40],
-    [14.35,14.35,14.36,14.41,14.37],
-    [14.32,14.35,14.34,14.39,14.31],
-    [14.33,14.32,14.30,14.40,14.40],
-    [14.35,14.36,14.35,14.35,14.40],
-    [14.31,14.30,14.35,14.36,14.33],
-    [14.35,14.35,14.37,14.30,14.32],
-    [14.30,14.32,14.31,14.39,14.30],
-    [14.32,14.31,14.40,14.37,14.30],
-    [14.41,14.38,14.36,14.37,14.36],
-    [14.40,14.38,14.38,14.33,14.38],
-    [14.35,14.36,14.36,14.35,14.36],
-    [14.36,14.35,14.33,14.32,14.35],
-    [14.36,14.36,14.35,14.31,14.35],
-    [14.38,14.38,14.41,14.30,14.40],
-    [14.39,14.40,14.32,14.32,14.39],
-    [14.39,14.35,14.37,14.13,14.41],
-    [14.38,14.35,14.37,14.30,14.37],
-    [14.35,14.35,14.31,14.34,14.33],
-    [14.36,14.39,14.32,14.34,14.34],
-    [14.36,14.38,14.31,14.31,14.38],
-    [14.35,14.38,14.38,14.38,14.31],
-    [14.36,14.35,14.33,14.37,14.35],
-    [14.38,14.36,14.37,14.35,14.34],
-    [14.36,14.35,14.33,14.35,14.40],
-    [14.35,14.39,14.39,14.40,14.32],
-    [14.35,14.36,14.35,14.37,14.32],
-    [14.36,14.38,14.34,14.32,14.39],
-    [14.36,14.38,14.34,14.32,14.32],
-    [14.38,14.39,14.33,14.34,14.32],
-  ],
-};
+// 1. เพิ่มฟังก์ชันช่วยสุ่มแบบ Normal Distribution (ให้ค่าส่วนใหญ่อยู่ใกล้ Standard)
+function getSimulatedValue(mean, usl, lsl) {
+  // กำหนดค่าความเบี่ยงเบนมาตรฐาน (Sigma) ให้ครอบคลุมช่วง Spec ประมาณ 99%
+  const stdDev = (usl - lsl) / 6; 
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  
+  const num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  const result = num * stdDev + mean;
+  
+  // ส่งกลับเป็นตัวเลขทศนิยม 2 ตำแหน่ง
+  return parseFloat(result.toFixed(2));
+}
 
+// 2. ปรับฟังก์ชัน loadDemo
 function loadDemo() {
+  const k = 30; // จำนวน Subgroup
+  const n = 5;  // จำนวน Sample ต่อกลุ่ม
+  const std = 14.50;
+  const usl = 15.00;
+  const lsl = 14.00;
+
+  // สร้างข้อมูลสุ่มใหม่ทุกครั้งที่กดโหลด
+  const generatedData = Array.from({ length: k }, () => 
+    Array.from({ length: n }, () => getSimulatedValue(std, usl, lsl))
+  );
+
   State.set({
-    k: DEMO.k, n: DEMO.n,
-    standard: DEMO.standard, usl: DEMO.usl, lsl: DEMO.lsl,
-    meas: DEMO.data.map(c => [...c]),
+    k: k, 
+    n: n,
+    standard: std, 
+    usl: usl, 
+    lsl: lsl,
+    meas: generatedData.map(c => [...c]), // ใช้ข้อมูลที่สุ่มขึ้นมาใหม่
     ready: true,
   });
-  $('#inp-subgroup').value = DEMO.k;
-  $('#inp-n').value        = DEMO.n;
-  $('#inp-standard').value = DEMO.standard;
-  $('#inp-usl').value      = DEMO.usl;
-  $('#inp-lsl').value      = DEMO.lsl;
+
+  // อัปเดตค่าในหน้า UI (บังคับ 2 ตำแหน่ง)
+  $('#inp-subgroup').value = k;
+  $('#inp-n').value        = n;
+  $('#inp-standard').value = std.toFixed(2);
+  $('#inp-usl').value      = usl.toFixed(2);
+  $('#inp-lsl').value      = lsl.toFixed(2);
+
   buildTable();
-  // update all table summaries
-  for (let sg = 0; sg < DEMO.k; sg++) updateTableSummary(sg);
+
+  // อัปเดตสรุปผลในตารางแต่ละคอลัมน์
+  for (let sg = 0; sg < k; sg++) {
+    updateTableSummary(sg);
+  }
+
   updateColHeaders();
   refreshAll();
-  toast('Demo data loaded', 'success');
+  toast('Generated random demo data', 'success');
 }
 
 /* ============================================================
