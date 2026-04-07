@@ -813,3 +813,91 @@ function init() {
 document.readyState === 'loading'
   ? document.addEventListener('DOMContentLoaded', init)
   : init();
+
+// Export
+document.getElementById('btn-export').addEventListener('click', async () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('SPC Report');
+
+    // --- ส่วนที่ 1: ข้อมูล Header & Input ---
+    sheet.addRow(['SPC CONTROL CHART REPORT']).font = { bold: true, size: 14 };
+    sheet.addRow(['Export Date:', new Date().toLocaleString()]);
+    sheet.addRow([]);
+
+    const inputData = [
+        ['Settings', 'Value'],
+        ['Subgroup (k)', document.getElementById('inp-subgroup')?.value || '-'],
+        ['Sample Size (n)', document.getElementById('inp-n')?.value || '-'],
+        ['Standard (Target)', document.getElementById('inp-standard')?.value || '-'],
+        ['USL', document.getElementById('inp-usl')?.value || '-'],
+        ['LSL', document.getElementById('inp-lsl')?.value || '-']
+    ];
+    sheet.addRows(inputData);
+    sheet.addRow([]);
+
+    // --- ส่วนที่ 2: ข้อมูลสรุปทางสถิติ (Summary Statistics) ---
+    sheet.addRow(['Summary Statistics']).font = { bold: true };
+    const stats = [
+        ['Parameter', 'Value'],
+        ['X-Bar Bar (x̄x̄)', document.getElementById('d-xbarbar')?.innerText || '-'],
+        ['UCL (x)', document.getElementById('d-uclx')?.innerText || '-'],
+        ['LCL (x)', document.getElementById('d-lclx')?.innerText || '-'],
+        ['R-Bar (r̄)', document.getElementById('d-rbar')?.innerText || '-'],
+        ['UCL (r)', document.getElementById('d-uclr')?.innerText || '-'],
+        ['LCL (r)', document.getElementById('d-lclr')?.innerText || '-'],
+        ['A2', document.getElementById('d-a2')?.innerText || '-'],
+        ['d2', document.getElementById('d-d2')?.innerText || '-'],
+        ['D3', document.getElementById('d-d3')?.innerText || '-'],
+        ['D4', document.getElementById('d-d4')?.innerText || '-'],
+        ['Cp', document.getElementById('d-cp')?.innerText || '-'],
+        ['Cpk', document.getElementById('d-cpk')?.innerText || '-']
+    ];
+    sheet.addRows(stats);
+    sheet.addRow([]);
+
+    // --- ส่วนที่ 3: ข้อมูลดิบในตาราง (Raw Data Table) ---
+    // ปรับให้ดึงจาก ID ตารางของคุณ (สมมติว่า id="main-table")
+    const table = document.querySelector('table'); 
+    if (table) {
+        sheet.addRow(['Raw Data Table']).font = { bold: true };
+        const rows = [];
+        Array.from(table.rows).forEach(row => {
+            const rowData = [];
+            Array.from(row.cells).forEach(cell => {
+                // ดึงค่าจาก innerText หรือถ้ามี Input ข้างในก็ดึงจาก value
+                const inputInside = cell.querySelector('input');
+                rowData.push(inputInside ? inputInside.value : cell.innerText);
+            });
+            rows.push(rowData);
+        });
+        sheet.addRows(rows);
+    }
+    sheet.addRow([]);
+
+    // --- ส่วนที่ 4: กราฟ (Charts) ---
+    const canvases = document.querySelectorAll('canvas');
+    let startRowForImage = sheet.rowCount + 1;
+
+    for (let i = 0; i < canvases.length; i++) {
+        const canvas = canvases[i];
+        const imageData = canvas.toDataURL('image/png');
+        const imageId = workbook.addImage({
+            base64: imageData,
+            extension: 'png',
+        });
+
+        sheet.addImage(imageId, {
+            tl: { col: 0, row: startRowForImage },
+            ext: { width: 1250, height: 350 }
+        });
+        startRowForImage += 18; // เว้นที่สำหรับกราฟถัดไป
+    }
+
+    // จัดความกว้างคอลัมน์ให้สวยงาม
+    sheet.getColumn(1).width = 25;
+    sheet.getColumn(2).width = 15;
+
+    // บันทึกไฟล์
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), `SPC_Full_Report_${Date.now()}.xlsx`);
+});
