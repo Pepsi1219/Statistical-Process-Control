@@ -305,9 +305,9 @@ function updateSidePanel(res) {
   const s = State.get();
 
   // Spec display
-  setText('d-std', s.standard !== null ? s.standard.toFixed(4) : '—');
-  setText('d-usl', s.usl !== null ? s.usl.toFixed(4) : '—');
-  setText('d-lsl', s.lsl !== null ? s.lsl.toFixed(4) : '—');
+  setText('d-std', s.standard !== null ? s.standard.toFixed(3) : '—');
+  setText('d-usl', s.usl !== null ? s.usl.toFixed(3) : '—');
+  setText('d-lsl', s.lsl !== null ? s.lsl.toFixed(3) : '—');
   setText('d-n', s.n);
 
   if (!res) {
@@ -318,12 +318,12 @@ function updateSidePanel(res) {
   }
   const { Xbb, Rb, uclX, lclX, uclR, lclR, A2, D3, D4, d2, Cp, Cpk } = res;
 
-  setText('d-xbarbar', fmt(Xbb));
-  setText('d-uclx',    fmt(uclX));
-  setText('d-lclx',    fmt(lclX));
-  setText('d-rbar',    fmt(Rb));
-  setText('d-uclr',    fmt(uclR));
-  setText('d-lclr',    fmt(lclR));
+  setText('d-xbarbar', fmt(Xbb, 3));
+  setText('d-uclx',    fmt(uclX, 3));
+  setText('d-lclx',    fmt(lclX, 3));
+  setText('d-rbar',    fmt(Rb, 3));
+  setText('d-uclr',    fmt(uclR, 3));
+  setText('d-lclr',    fmt(lclR, 3));
   setText('d-a2',      fmt(A2, 3));
   setText('d-d3',      fmt(D3, 3));
   setText('d-d4',      fmt(D4, 3));
@@ -461,11 +461,12 @@ ctx.restore();
     ctx.font         = `bold 9px ${cssv('--mono')}`;
     ctx.textAlign    = 'left';
     ctx.textBaseline = 'bottom';
-    ctx.fillText(lbl, pad.left + 2, yp - 2);
+    ctx.fillText(lbl, pad.left - 20, yp + 8);
     ctx.restore();
   };
-  drawSpecLine(specLines.usl, cssv('--orange'), `USL ${specLines.usl?.toFixed(3) ?? ''}`);
-  drawSpecLine(specLines.lsl, cssv('--orange'), `LSL ${specLines.lsl?.toFixed(3) ?? ''}`);
+  drawSpecLine(specLines.standard, cssv('--brand'), `STD`); //${specLines.standard?.toFixed(2) ?? ''}
+  drawSpecLine(specLines.usl, cssv('--orange'), `USL`); //${specLines.usl?.toFixed(2) ?? ''}
+  drawSpecLine(specLines.lsl, cssv('--orange'), `LSL`); //${specLines.lsl?.toFixed(2) ?? ''}
 
   // ── Horizontal control lines ──
   hLines.forEach(line => {
@@ -483,7 +484,7 @@ ctx.restore();
     ctx.textAlign    = 'right';
     ctx.textBaseline = 'bottom';
     ctx.globalAlpha  = 0.9;
-    ctx.fillText(`${line.label} ${line.value.toFixed(4)}`, pad.left + pw - 2, yp - 2);
+    ctx.fillText(` ${line.label}`, pad.left + pw + 17, yp - 5);
     ctx.restore();
   });
 
@@ -533,7 +534,7 @@ ctx.restore();
       ctx.font         = `bold 9px ${cssv('--mono')}`;
       ctx.textAlign    = 'center';
       ctx.textBaseline = 'bottom';
-      ctx.fillText(dataArr[i].toFixed(4), p.x, p.y - r - 2);
+      ctx.fillText(dataArr[i].toFixed(3), p.x, p.y - r - 2);
     }
     ctx.restore();
   });
@@ -613,11 +614,10 @@ function drawXbarChart(res) {
   const s = State.get();
   const hLines = [
     { label: 'UCL', value: res.uclX, color: cssv('--red'),   width: 2,   dash: [] },
-    { label: 'CL',  value: res.Xbb,  color: cssv('--green'), width: 1.6, dash: [7, 4] },
+    { label: 'Mean',  value: res.Xbb,  color: cssv('--green'), width: 1.6, dash: [] },
     { label: 'LCL', value: res.lclX, color: cssv('--red'),   width: 2,   dash: [] },
   ];
-  if (s.standard !== null)
-    hLines.push({ label: 'STD', value: s.standard, color: cssv('--brand'), width: 1.2, dash: [3, 3], alpha: 0.7 });
+ 
 
   drawSPCChart(
     canvas,
@@ -627,14 +627,17 @@ function drawXbarChart(res) {
     res.details.map(d => `x${d.i}`),
     cssv('--brand'),
     'X̄',
-    { usl: s.usl, lsl: s.lsl }
+    { usl: s.usl, 
+      lsl: s.lsl,
+      standard: s.standard
+    }
   );
 
   buildLegend('legend-xbar', [
     { label: 'X̄',         color: cssv('--brand') },
     { label: 'UCL/LCL',   color: cssv('--red') },
-    { label: 'Center',    color: cssv('--green'), dash: true },
-    ...(s.usl !== null || s.lsl !== null ? [{ label: 'Spec', color: cssv('--orange'), dash: true }] : []),
+    { label: 'Mean',    color: cssv('--green'), dash: true },
+    ...(s.usl !== null || s.lsl !== null ? [{ label: 'USL/LSL', color: cssv('--orange'), dash: true }] : []),
   ]);
 }
 
