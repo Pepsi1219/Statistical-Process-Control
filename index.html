@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Statistical Process Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<div id="toast-container" aria-live="polite"></div>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M2 10h16M10 2v16M2 6h4M2 14h4M14 6h4M14 14h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">Statistical Process Control</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-sm btn-demo" id="btn-demo">Load Demo</button>
+      <button class="btn-sm btn-reset" id="btn-reset">Reset</button>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M8 1v1M8 14v1M1 8h1M14 8h1M3.2 3.2l.7.7M12.1 12.1l.7.7M12.8 3.2l-.7.7M3.9 12.1l-.7.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13 9A6 6 0 1 1 7 3c0 3.3 2.7 6 6 6z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="app-main">
+
+  <!-- Config Row -->
+  <section class="config-row glass-card">
+    <div class="config-fields">
+      <div class="field-group">
+        <label class="field-label" for="inp-subgroup">Subgroup (k)</label>
+        <div class="field-wrap">
+          <input type="number" id="inp-subgroup" class="field-input" value="10" min="2" max="50"/>
+          <span class="field-unit">groups</span>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-n">Sample Size (n)</label>
+        <div class="field-wrap">
+          <input type="number" id="inp-n" class="field-input" value="5" min="2" max="10"/>
+          <span class="field-unit">samples</span>
+        </div>
+      </div>
+      <div class="field-divider"></div>
+      <div class="field-group">
+        <label class="field-label" for="inp-standard">Standard</label>
+        <input type="number" id="inp-standard" class="field-input" step="0.01" placeholder="—"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-usl"><span class="sdot red"></span>USL</label>
+        <input type="number" id="inp-usl" class="field-input" step="0.01" placeholder="—"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="inp-lsl"><span class="sdot green"></span>LSL</label>
+        <input type="number" id="inp-lsl" class="field-input" step="0.01" placeholder="—"/>
+      </div>
+      <div class="field-divider"></div>
+      <div class="field-group field-action">
+        <button class="btn-generate" id="btn-generate">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1v11M1 6.5h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Generate Table
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table + Side Panel -->
+  <section class="content-row">
+    <div class="table-wrap glass-card">
+      <div class="table-toolbar">
+        <span class="table-title">Measurement Data</span>
+        <span class="table-meta" id="table-meta"></span>
+      </div>
+      <div class="table-scroll" id="table-scroll">
+        <div class="empty-state" id="empty-state">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="28" height="28" rx="3" stroke="currentColor" stroke-width="1.4" stroke-dasharray="4 3"/><path d="M18 13v7M18 24v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <p>กำหนด Subgroup, n แล้วกด Generate Table</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-panel glass-card">
+      <div class="side-block">
+        <div class="side-heading">Specification</div>
+        <div class="kv-list">
+          <div class="kv"><span>Standard</span><span id="d-std">—</span></div>
+          <div class="kv"><span><span class="sdot red"></span>USL</span><span id="d-usl">—</span></div>
+          <div class="kv"><span><span class="sdot green"></span>LSL</span><span id="d-lsl">—</span></div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="side-heading">x̄-Chart</div>
+        <div class="kv-list">
+          <div class="kv"><span>X̄ (Grand mean)</span><span id="d-xbarbar">—</span></div>
+          <div class="kv kv-ucl"><span>UCL<sub>x̄</sub></span><span id="d-uclx">—</span></div>
+          <div class="kv kv-lcl"><span>LCL<sub>x̄</sub></span><span id="d-lclx">—</span></div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="side-heading">R-Chart</div>
+        <div class="kv-list">
+          <div class="kv"><span>R̄ (Mean range)</span><span id="d-rbar">—</span></div>
+          <div class="kv kv-ucl"><span>UCL<sub>R</sub></span><span id="d-uclr">—</span></div>
+          <div class="kv kv-lcl"><span>LCL<sub>R</sub></span><span id="d-lclr">—</span></div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="side-heading">Constants (n=<span id="d-n">—</span>)</div>
+        <div class="kv-list">
+          <div class="kv"><span>A₂</span><span id="d-a2">—</span></div>
+          <div class="kv"><span>D₃</span><span id="d-d3">—</span></div>
+          <div class="kv"><span>D₄</span><span id="d-d4">—</span></div>
+          <div class="kv"><span>d₂</span><span id="d-d2">—</span></div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="side-heading">Process Capability</div>
+        <div class="cap-grid">
+          <div class="cap-box"><div class="cap-val" id="d-cp">—</div><div class="cap-key">Cp</div></div>
+          <div class="cap-box"><div class="cap-val" id="d-cpk">—</div><div class="cap-key">Cpk</div></div>
+        </div>
+        <div class="cap-badge-wrap"><span class="cap-badge" id="d-cap-status"></span></div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- X-bar Chart -->
+  <section class="chart-section glass-card">
+    <div class="chart-hdr">
+      <span class="chart-lbl">x̄-Chart <em>(Mean Chart)</em></span>
+      <div class="legend" id="legend-xbar"></div>
+    </div>
+    <div class="canvas-wrap" id="xbar-wrap">
+      <canvas id="xbar-canvas"></canvas>
+      <div class="canvas-ph" id="xbar-ph"><p>ป้อนข้อมูลครบ 1 Subgroup เพื่อแสดงกราฟ</p></div>
+    </div>
+  </section>
+
+  <!-- R Chart -->
+  <section class="chart-section glass-card">
+    <div class="chart-hdr">
+      <span class="chart-lbl">R-Chart <em>(Range Chart)</em></span>
+      <div class="legend" id="legend-r"></div>
+    </div>
+    <div class="canvas-wrap" id="r-wrap">
+      <canvas id="r-canvas"></canvas>
+      <div class="canvas-ph" id="r-ph"><p>ป้อนข้อมูลครบ 1 Subgroup เพื่อแสดงกราฟ</p></div>
+    </div>
+  </section>
+
+</main>
+<script src="script.js"></script>
+</body>
+</html>
