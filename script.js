@@ -484,7 +484,7 @@ ctx.restore();
     ctx.textAlign    = 'right';
     ctx.textBaseline = 'bottom';
     ctx.globalAlpha  = 0.9;
-    ctx.fillText(` ${line.label}`, pad.left + pw + 17, yp - 5);
+    ctx.fillText(` ${line.label}`, pad.left + pw + 16, yp - 1); //ปรับตำแหน่ง/*
     ctx.restore();
   });
 
@@ -614,7 +614,7 @@ function drawXbarChart(res) {
   const s = State.get();
   const hLines = [
     { label: 'UCL', value: res.uclX, color: cssv('--red'),   width: 2,   dash: [] },
-    { label: 'Mean',  value: res.Xbb,  color: cssv('--green'), width: 1.6, dash: [] },
+    { label: 'x̄',  value: res.Xbb,  color: cssv('--green'), width: 1.6, dash: [] },
     { label: 'LCL', value: res.lclX, color: cssv('--red'),   width: 2,   dash: [] },
   ];
  
@@ -634,9 +634,9 @@ function drawXbarChart(res) {
   );
 
   buildLegend('legend-xbar', [
-    { label: 'X̄',         color: cssv('--brand') },
+    { label: 'xᵢ',         color: cssv('--brand') },
     { label: 'UCL/LCL',   color: cssv('--red') },
-    { label: 'Mean',    color: cssv('--green'), dash: true },
+    { label: 'x̄',    color: cssv('--green'), dash: true },
     ...(s.usl !== null || s.lsl !== null ? [{ label: 'USL/LSL', color: cssv('--orange'), dash: true }] : []),
   ]);
 }
