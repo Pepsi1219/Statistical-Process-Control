@@ -82,7 +82,8 @@ input[type=number]{-moz-appearance:textfield}
   border-bottom:1px solid var(--card-border);
 }
 .header-inner{
-  max-width:1700px;margin:0 auto;height:100%;
+  max-width: 100%;
+  width: 100%;margin:0 auto;height:100%;
   padding:0 20px;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
 }
@@ -195,7 +196,7 @@ input[type=number]{-moz-appearance:textfield}
 .btn-generate:active{transform:none}
 
 /* ── Content Row (Table + Side) ── */
-.content-row{display:flex;gap:14px;align-items:flex-start}
+.content-row{width: 100%;margin-bottom: 20px;display:flex;gap:14px;align-items:flex-start}
 
 /* Table */
 .table-wrap{flex:1 1 0;min-width:0;padding:0;overflow:hidden}
@@ -418,6 +419,7 @@ canvas{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  width: 100%;
 }
 
 /* ปรับ Side Panel ให้เป็น Dashboard แนวนอน */
