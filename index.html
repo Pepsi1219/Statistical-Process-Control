@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="light">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -53,17 +53,43 @@
         </div>
       </div>
       <div class="field-divider"></div>
-      <div class="field-group">
-        <label class="field-label" for="inp-standard">Standard</label>
-        <input type="number" id="inp-standard" class="field-input" step="0.01" placeholder="—"/>
+     <div class="field-group">
+  <label class="field-label" for="inp-standard">Standard</label>
+        <input 
+          type="number" 
+          id="inp-standard" 
+          class="field-input" 
+          step="any" 
+          inputmode="decimal" 
+          pattern="[0-9]*" 
+          placeholder="—"
+        />
       </div>
+      
       <div class="field-group">
         <label class="field-label" for="inp-usl"><span class="sdot red"></span>USL</label>
-        <input type="number" id="inp-usl" class="field-input" step="0.01" placeholder="—"/>
+        <input 
+          type="number" 
+          id="inp-usl" 
+          class="field-input" 
+          step="any" 
+          inputmode="decimal" 
+          pattern="[0-9]*" 
+          placeholder="—"
+        />
       </div>
+      
       <div class="field-group">
         <label class="field-label" for="inp-lsl"><span class="sdot green"></span>LSL</label>
-        <input type="number" id="inp-lsl" class="field-input" step="0.01" placeholder="—"/>
+        <input 
+          type="number" 
+          id="inp-lsl" 
+          class="field-input" 
+          step="any" 
+          inputmode="decimal" 
+          pattern="[0-9]*" 
+          placeholder="—"
+        />
       </div>
       <div class="field-divider"></div>
       <div class="field-group field-action">
@@ -123,7 +149,8 @@
   <div class="side-block glass-card">
     <div class="side-heading">Constants (n=<span id="d-n">—</span>)</div>
     <div class="kv-list">
-      <div class="kv"><span>A₂ / d₂</span><span><span id="d-a2">—</span> / <span id="d-d2">—</span></span></div>
+      <div class="kv"><span>A₂</span><span id="d-a2">—</span></div>
+      <div class="kv"><span>d₂</span><span id="d-d2">—</span></div>
       <div class="kv"><span>D₃</span><span id="d-d3">—</span></div>
       <div class="kv"><span>D₄</span><span id="d-d4">—</span></div>
     </div>
