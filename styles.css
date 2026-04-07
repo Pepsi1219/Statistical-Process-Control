@@ -455,3 +455,18 @@ canvas{
     grid-template-columns: 1fr; /* สรุปผลเรียงแนวตั้งบนมือถือ */
   }
 }
+
+  /* ป้องกันการ Double-tap to zoom ในทุกองค์ประกอบ */
+html, body {
+  touch-action: manipulation;
+}
+
+/* หากต้องการเจาะจงเฉพาะปุ่ม หรือส่วน input ที่กดบ่อยๆ */
+button, .glass-card, canvas {
+  touch-action: manipulation;
+}
+  /* ป้องกันการเผลอไปกดค้างแล้วขึ้นแถบเลือกข้อความ */
+.app-main, button, .canvas-wrap {
+  -webkit-user-select: none; /* Safari */
+  user-select: none;         /* Standard syntax */
+}
